@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  todos:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 9999:4000
+    environment:
+      MIX_ENV: prod
+      DATABASE_URL: postgres://postgres:postgres@postgres/daily_prod
+      SECRET_KEY_BASE: RoWIz8MJ0e7vMI9anXkEExGDc2LzOkaF1iByudrJtyRVJz3hDrFnNveUmvf/2Ijv
+      PHX_HOST: localhost
+      PHX_URL_PORT: '9999'
+      PHX_URL_SCHEME: 'http'
+    command: >
+      sh -c "mix ecto.create &&
+             mix ecto.migrate &&
+             mix phx.server"
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    profiles:
+      - app
+volumes:
+  postgres_data: {}
