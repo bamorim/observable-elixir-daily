@@ -24,13 +24,49 @@ services:
       PHX_URL_PORT: '9999'
       PHX_URL_SCHEME: 'http'
     command: >
-      sh -c "mix ecto.create &&
+      sh -c "mix deps.get &&
+             mix ecto.create &&
              mix ecto.migrate &&
              mix phx.server"
-    working_dir: /workspace
+    working_dir: /app
     volumes:
-      - .:/workspace
+      - ./config:/app/config:ro
+      - ./lib:/app/lib:ro
+      - ./priv:/app/priv:ro
+      - ./mix.exs:/app/mix.exs:ro
+      - ./mix.lock:/app/mix.lock:rw
+      - elixir-deps:/app/deps/
+      - elixir-build:/app/_build/
     profiles:
       - app
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+
+  loki:
+    image: grafana/loki:main-de418bf
+    volumes:
+      - ./docker/loki/loki-config.yml:/etc/loki/loki-config.yml
+      - loki-data-index:/loki-index
+      - loki-data-chunks:/loki-chunks
+    expose:
+      - 3100
+    ports:
+      - '3100:3100'
+    command: '-config.file=/etc/loki/loki-config.yml'
+
+  grafana:
+    image: grafana/grafana:8.5.4
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/:/etc/grafana/provisioning/
 volumes:
+  elixir-deps: {}
+  elixir-build: {}
   postgres_data: {}
+  loki-data-index: {}
+  loki-data-chunks: {}
+  grafana-data: {}
