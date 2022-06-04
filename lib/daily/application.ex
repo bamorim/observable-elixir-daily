@@ -5,8 +5,14 @@ defmodule Daily.Application do
 
   use Application
 
+  alias TelemetryLoggers.PlugLogger
+
   @impl true
   def start(_type, _args) do
+    TelemetryLogger.attach_loggers([
+      {PlugLogger, router: DailyWeb.Router}
+    ])
+
     children = [
       # Start the Ecto repository
       Daily.Repo,
