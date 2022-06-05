@@ -47,7 +47,12 @@ defmodule Daily.MixProject do
       {:structured_logger, github: "bamorim/structured_logger"},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
-      {:prom_ex, "~> 1.7.1"}
+      {:prom_ex, "~> 1.7.1"},
+      {:opentelemetry, "~> 1.0"},
+      {:opentelemetry_exporter, "~> 1.0"},
+      {:opentelemetry_phoenix, "~> 1.0"},
+      {:opentelemetry_ecto, "~> 1.0"},
+      {:opentelemetry_tesla, "~> 2.0"}
     ]
   end
 

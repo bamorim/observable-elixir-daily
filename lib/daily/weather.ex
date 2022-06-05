@@ -19,6 +19,7 @@ defmodule Daily.Weather do
       {Tesla.Middleware.BaseUrl, base_url()},
       Tesla.Middleware.JSON,
       Tesla.Middleware.Telemetry,
+      Tesla.Middleware.OpenTelemetry,
       {Tesla.Middleware.Logger, log_level: :debug}
     ])
   end

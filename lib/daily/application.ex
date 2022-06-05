@@ -9,6 +9,9 @@ defmodule Daily.Application do
 
   @impl true
   def start(_type, _args) do
+    OpentelemetryEcto.setup([:daily, :repo])
+    OpentelemetryPhoenix.setup()
+
     TelemetryLogger.attach_loggers([
       {PlugLogger, router: DailyWeb.Router}
     ])

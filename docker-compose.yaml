@@ -24,6 +24,9 @@ services:
       PHX_URL_PORT: '4001'
       PHX_URL_SCHEME: 'http'
       WEATHER_SERVICE_URL: 'http://weather:5000'
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://tempo:4317"
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL: grpc
+      OTEL_SERVICE_NAME: "daily"
     command: >
       sh -c "mix setup &&
              mix phx.server"
