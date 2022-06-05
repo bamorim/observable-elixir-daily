@@ -1,0 +1,21 @@
+{
+  auto_https off
+}
+
+http://localhost:5000, http://caddy:5000 {
+  log
+  handle /api/weather {
+    tracing {
+      span "/api/weather"
+    }
+    header Content-Type "application/json"
+    respond "{\"weather\": \"rainy\"}"
+  }
+
+  handle {
+    tracing {
+      span "daily proxy"
+    }
+    reverse_proxy "http://daily:4000"
+  }
+}

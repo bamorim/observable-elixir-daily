@@ -12,3 +12,7 @@ datasources:
     access: proxy
     url: http://prometheus:9090
     editable: false
+  - name: tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200

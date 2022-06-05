@@ -10,18 +10,18 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-  todos:
+  daily:
     build:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - 9999:4000
+      - 4001:4000
     environment:
       MIX_ENV: prod
       DATABASE_URL: postgres://postgres:postgres@postgres/daily_prod
       SECRET_KEY_BASE: RoWIz8MJ0e7vMI9anXkEExGDc2LzOkaF1iByudrJtyRVJz3hDrFnNveUmvf/2Ijv
       PHX_HOST: localhost
-      PHX_URL_PORT: '9999'
+      PHX_URL_PORT: '4001'
       PHX_URL_SCHEME: 'http'
     command: >
       sh -c "mix deps.get &&
@@ -44,8 +44,23 @@ services:
       options:
         loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
 
+  caddy:
+    image: caddy:2.5.1-alpine
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 5000:5000
+    environment:
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://tempo:4317"
+      OTEL_SERVICE_NAME: "caddy"
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+
+  # Observability Tools
   loki:
-    image: grafana/loki:main-de418bf
+    image: grafana/loki:2.5.0
     volumes:
       - ./docker/loki/loki-config.yml:/etc/loki/loki-config.yml
       - loki-data-index:/loki-index
@@ -63,6 +78,10 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - ./docker/grafana/:/etc/grafana/provisioning/
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
   prometheus:
     image: prom/prometheus:v2.36.0
     volumes:
@@ -73,6 +92,20 @@ services:
       - '--storage.tsdb.path=/prometheus'
     ports:
       - 9090:9090
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+  tempo:
+    image: grafana/tempo:1.4.1
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./docker/tempo/tempo.yaml:/etc/tempo.yaml
+      - tempo-data:/tmp/tempo
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
 volumes:
   elixir-deps: {}
   elixir-build: {}
@@ -81,3 +114,4 @@ volumes:
   loki-data-chunks: {}
   grafana-data: {}
   prometheus-data: {}
+  tempo-data: {}
