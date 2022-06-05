@@ -25,9 +25,7 @@ services:
       PHX_URL_SCHEME: 'http'
       WEATHER_SERVICE_URL: 'http://weather:5000'
     command: >
-      sh -c "mix deps.get &&
-             mix ecto.create &&
-             mix ecto.migrate &&
+      sh -c "mix setup &&
              mix phx.server"
     working_dir: /app
     volumes:
@@ -38,8 +36,6 @@ services:
       - ./mix.lock:/app/mix.lock:rw
       - elixir-deps:/app/deps/
       - elixir-build:/app/_build/
-    profiles:
-      - app
     logging:
       driver: loki
       options:
