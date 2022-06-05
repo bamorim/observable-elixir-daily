@@ -63,6 +63,16 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - ./docker/grafana/:/etc/grafana/provisioning/
+  prometheus:
+    image: prom/prometheus:v2.36.0
+    volumes:
+      - ./docker/prometheus/:/etc/prometheus/
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - 9090:9090
 volumes:
   elixir-deps: {}
   elixir-build: {}
@@ -70,3 +80,4 @@ volumes:
   loki-data-index: {}
   loki-data-chunks: {}
   grafana-data: {}
+  prometheus-data: {}

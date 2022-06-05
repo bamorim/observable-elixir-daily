@@ -7,3 +7,8 @@ datasources:
     access: proxy
     url: http://loki:3100
     editable: false
+  - name: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    editable: false
