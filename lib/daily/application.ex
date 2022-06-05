@@ -14,6 +14,8 @@ defmodule Daily.Application do
     ])
 
     children = [
+      # Start PromEx
+      Daily.PromEx,
       # Start the Ecto repository
       Daily.Repo,
       # Start the Telemetry supervisor
