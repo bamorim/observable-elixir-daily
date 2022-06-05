@@ -9,6 +9,7 @@ defmodule DailyWeb.Router do
     pipe_through :api
 
     resources "/tasks", TaskController, except: [:new, :edit]
+    get "/reports/daily", ReportController, :daily
   end
 
   # Enables LiveDashboard only for development

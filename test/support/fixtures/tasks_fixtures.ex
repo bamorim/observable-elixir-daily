@@ -11,7 +11,7 @@ defmodule Daily.TasksFixtures do
     {:ok, task} =
       attrs
       |> Enum.into(%{
-        description: "some description"
+        description: "some description #{Enum.random(0..9999)}"
       })
       |> Daily.Tasks.create_task()
 

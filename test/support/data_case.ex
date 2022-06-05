@@ -55,4 +55,17 @@ defmodule Daily.DataCase do
       end)
     end)
   end
+
+  def mock_weather_api(tags) do
+    weather = Map.get(tags, :weather, "rainy")
+
+    Tesla.Mock.mock(fn
+      %{method: :get, url: _} ->
+        %Tesla.Env{
+          status: 200,
+          body: Jason.encode!(%{weather: weather}),
+          headers: [{"content-type", "application/json"}]
+        }
+    end)
+  end
 end

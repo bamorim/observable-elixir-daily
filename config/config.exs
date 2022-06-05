@@ -8,7 +8,8 @@
 import Config
 
 config :daily,
-  ecto_repos: [Daily.Repo]
+  ecto_repos: [Daily.Repo],
+  weather_service_url: "http://localhost:5000"
 
 # Configures the endpoint
 config :daily, DailyWeb.Endpoint,
@@ -39,6 +40,8 @@ config :logger, :console,
 config :phoenix,
   json_library: Jason,
   logger: false
+
+config :tesla, adapter: Tesla.Adapter.Hackney
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

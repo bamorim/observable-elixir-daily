@@ -44,7 +44,9 @@ defmodule Daily.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:telemetry_logger, github: "bamorim/telemetry_logger"},
-      {:structured_logger, github: "bamorim/structured_logger"}
+      {:structured_logger, github: "bamorim/structured_logger"},
+      {:tesla, "~> 1.4"},
+      {:hackney, "~> 1.17"}
     ]
   end
 

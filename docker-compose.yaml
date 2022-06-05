@@ -23,6 +23,7 @@ services:
       PHX_HOST: localhost
       PHX_URL_PORT: '4001'
       PHX_URL_SCHEME: 'http'
+      WEATHER_SERVICE_URL: 'http://weather:5000'
     command: >
       sh -c "mix deps.get &&
              mix ecto.create &&
@@ -49,10 +50,24 @@ services:
     volumes:
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile
     ports:
-      - 5000:5000
+      - 4002:4002
     environment:
       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://tempo:4317"
       OTEL_SERVICE_NAME: "caddy"
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+
+  weather:
+    image: caddy:2.5.1-alpine
+    volumes:
+      - ./docker/weather/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 5000:5000
+    environment:
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://tempo:4317"
+      OTEL_SERVICE_NAME: "weather"
     logging:
       driver: loki
       options:

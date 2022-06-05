@@ -23,6 +23,7 @@ defmodule DailyWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import DailyWeb.ConnCase
+      import Daily.DataCase, only: [mock_weather_api: 1]
 
       alias DailyWeb.Router.Helpers, as: Routes
 
