@@ -120,6 +120,21 @@ services:
       driver: loki
       options:
         loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+
+  # Load Generation
+  locust:
+    ports:
+      - 8080:8080
+    image: locustio/locust:2.9.0
+    command:
+      - "-f"
+      - "/locustfile/locustfile.py"
+      - "-H"
+      - "http://caddy:4002"
+      - "-P"
+      - "8080"
+    volumes:
+      - ./docker/locust/locustfile.py:/locustfile/locustfile.py
 volumes:
   elixir-deps: {}
   elixir-build: {}
