@@ -124,7 +124,7 @@ services:
   # Load Generation
   locust:
     ports:
-      - 8080:8080
+      - 5100:5100
     image: locustio/locust:2.9.0
     command:
       - "-f"
@@ -132,7 +132,7 @@ services:
       - "-H"
       - "http://caddy:4002"
       - "-P"
-      - "8080"
+      - "5100"
     volumes:
       - ./docker/locust/locustfile.py:/locustfile/locustfile.py
 volumes:
